@@ -17,6 +17,12 @@ db_init(app)
 login_manager = LoginManager(app)
 
 
+@login_manager.user_loader
+def load_user(user_id):
+    print('load_user')
+    return UserLogin().fromDB(user_id, Users)
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -43,17 +49,17 @@ def profile(user_id):
 
 
 @app.route('/singin')  # войти
-def profile(user_id):
+def singin():
     pass
 
 
 @app.route('/singup>')  # зарегаться
-def profile(user_id):
+def singup():
     pass
 
 
 # только для учителя
-@app.route('myclass/<int:user_id>')  # все классы учителя
+@app.route('/myclass/<int:user_id>')  # все классы учителя
 def foo(user_id):
     pass
 

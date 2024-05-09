@@ -2,7 +2,7 @@ from db import db
 
 
 class Users(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(20), nullable=False)
     surname = db.Column(db.String(20), nullable=False)
     fatname = db.Column(db.String(20), nullable=False)
@@ -19,18 +19,21 @@ class Users(db.Model):
 
 
 class Student(db.Model):
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     student_class = db.Column(db.String(5), nullable=False)
 
 
 class Teacher(db.Model):
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     teacher_classes = db.Column(db.String(70), nullable=False, default='[]')
     subject_id = db.Column(db.Integer)
 
 
 class Rating(db.Model):
-    id = db.Column(db.Integer)
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer)
     subject_id = db.Column(db.Integer)
     rating = db.Column(db.Integer)
     date = db.Column(db.String(20), nullable=False)
