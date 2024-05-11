@@ -28,7 +28,7 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/diary/<int:user_id>')  # расписание
+@app.route('/diary/<int:user_id>') # расписание
 def diary(user_id):
     pass
 
@@ -50,12 +50,13 @@ def profile(user_id):
 
 @app.route('/singin')  # войти
 def singin():
-    pass
+    return render_template('singin.html')
 
 
-@app.route('/singup>')  # зарегаться
+@app.route('/singup')  # зарегаться
 def singup():
-    pass
+    return render_template('singup.html')
+
 
 
 # только для учителя

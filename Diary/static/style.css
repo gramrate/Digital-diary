@@ -2,23 +2,3 @@
 .container {
     text-align: center; /* Центрирование содержимого контейнера */
 }
-
-.button {
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    transition-duration: 0.4s;
-    cursor: pointer;
-    background-color: #007bff; /* Синий цвет фона */
-    color: white; /* Белый цвет текста */
-    border: 2px solid #0056b3; /* Темно-синий цвет границы */
-    border-radius: 5px; /* Закругление углов */
-}
-
-.button:hover {
-    background-color: #0056b3; /* Темно-синий цвет фона при наведении */
-    color: white;
-}

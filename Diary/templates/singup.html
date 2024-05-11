@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="container mt-5">
+    <h1>Registration</h1>
+    <form method="post">
+        <input type="text" name="name" class="form-control" placeholder="Enter name"><br>
+        <input type="text" name="name" class="form-control" placeholder="Enter surname"><br>
+        <input type="text" name="name" class="form-control" placeholder="Enter fatname"><br>
+
+        <input type="password" name='psw' class="form-control" placeholder="Enter password"><br>
+        <input type="password" name='psw' class="form-control" placeholder="Repeat password"><br>
+
+        <input type="radio" id="student" name="type_user" value="student">
+        <label for="option1">I'm Student</label>
+
+        <input type="radio" id="teacher" name="type_user" value="teacher">
+        <label for="option2">I'm Teacher</label>
+        <br><br>
+
+
+        <input type="submit" class="btn btn-primary" value="Sing up">
+    </form>
+</div>
+{% endblock %}
