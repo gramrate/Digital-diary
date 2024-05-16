@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block body%}
+<div class="container">
+    <h3>{{message}}</h3>
+    <h5>Message id #{{message_id}}</h5>
+    <br>
+    <a href="/{{back}}" class="btn btn-primary">Back</a>
+</div>
+{% endblock %}

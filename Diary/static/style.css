@@ -1,4 +1,6 @@
-/* Добавьте эти стили в ваш CSS */
 .container {
     text-align: center; /* Центрирование содержимого контейнера */
+}
+.red-text {
+  color: red;
 }
