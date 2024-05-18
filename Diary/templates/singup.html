@@ -22,6 +22,9 @@
         {% if clear_fields %}
         <p class="red-text">All fields must be completed</p>
         {% endif %}
+        {% if user_exists %}
+        <p class="red-text">Registration failed, user already exists</p>
+        {% endif %}
 
         <input type="submit" class="btn btn-primary" value="Sing up">
     </form>

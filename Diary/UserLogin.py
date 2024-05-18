@@ -2,7 +2,7 @@ class UserLogin():
     def fromDB(self, user_id, db):
         myusers = db.query.all()
         for user1 in myusers:
-            if user_id == user1.id:
+            if user_id == user1.user_id:
                 self.__user = user1
         return self
 
@@ -20,5 +20,5 @@ class UserLogin():
         return False
 
     def get_id(self):
-        return str(self.__user.id)
+        return str(self.__user.user_id)
         

@@ -1,6 +1,42 @@
+.red-text {
+    color: red;
+}
+
 .container {
     text-align: center; /* Центрирование содержимого контейнера */
 }
-.red-text {
-  color: red;
+
+.column {
+    flex: 1;
+    margin: 10px;
+    /* Стили для колонок */
+}
+
+.prof-container {
+    display: flex;
+    width: 600px;
+    margin: auto;
+    justify-content: space-between;
+
+}
+
+.user-avatar {
+    width: 300px;
+    height: 300px;
+    margin-bottom: 20px;
+    /*border-radius: 50%;*/
+
+    /* Стили для аватарки */
+}
+
+.user-info {
+    margin-bottom: 20px;
+    /* Стили для информации о пользователе */
+}
+
+.link-bottom {
+    display: block;
+    text-align: center;
+    margin-top: auto;
+    /* Стили для ссылки внизу */
 }
