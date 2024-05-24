@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block body%}
+<div class="prof-container">
+    <div class="column">
+        <div class="container">
+            <div class="user-info">
+                <div class="container mt-5">
+                    <h1>Edit</h1>
+                    <h4>User id - {{user_id}}</h4>
+                    <form method="post">
+                        <input type="text" name="surname" class="form-control" placeholder="Enter surname"
+                               value="{{surname}}"><br>
+                        <input type="text" name="name" class="form-control" placeholder="Enter name"
+                               value="{{name}}"><br>
+                        <input type="text" name="fatname" class="form-control" placeholder="Enter fatname"
+                               value="{{fatname}}"><br>
+                        {% if is_teacher %}
+                        <input type="radio" id="student" name="type_user" value="student">
+                        <label for="option1">I'm Student</label>
+                        <input type="radio" id="teacher" name="type_user" value="teacher" checked>
+                        <label for="option2">I'm Teacher</label>
+                        {% endif %}
+                        {% if is_student %}
+                        <input type="radio" id="student" name="type_user" value="student" checked>
+                        <label for="option1">I'm Student</label>
+                        <input type="radio" id="teacher" name="type_user" value="teacher">
+                        <label for="option2">I'm Teacher</label>
+                        {% elif clear_fields %}
+                        <p class="red-text">All fields must be completed</p>
+                        {% endif %}
+                        <br><br>
+                        <input type="submit" class="btn btn-primary" value="Edit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

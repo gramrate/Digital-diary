@@ -13,7 +13,7 @@ class Users(db.Model):
 
 class Img(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, index=True)
     img = db.Column(db.Text, unique=True, nullable=False)
     name = db.Column(db.Text, nullable=False)
     mimetype = db.Column(db.Text, nullable=False)
@@ -21,21 +21,21 @@ class Img(db.Model):
 
 class Student(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, index=True)
     class_num = db.Column(db.String(3), nullable=False)
     class_let = db.Column(db.String(3), nullable=False)
 
 
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, index=True)
     teacher_classes = db.Column(db.String(70), nullable=False, default='[]')
     subject_id = db.Column(db.Integer)
 
 
 class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer)
+    user_id = db.Column(db.Integer, index=True)
     subject_id = db.Column(db.Integer)
     rating = db.Column(db.Integer)
     date = db.Column(db.String(20), nullable=False)

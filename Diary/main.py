@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from db import db_init, db
 from models import *
 from variables import MESSAGE_LIST
-from functions import check_name_into_database, get_user_by_name
+from functions import get_user_by_name
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key-goes-here'
@@ -45,7 +45,7 @@ def ratings(user_id):
     pass
 
 
-@app.route('/profile/<int:user_id>', methods=['GET', 'POST'])  # Профиль
+@app.route('/profile/<int:user_id>')  # Профиль
 def profile(user_id):
     user = Users.query.filter_by(user_id=user_id).first()
     student = Student.query.filter_by(user_id=user_id).first()
@@ -57,15 +57,48 @@ def profile(user_id):
             class_num = student.class_num
             class_let = f'"{student.class_let}"'
         return render_template('profile.html', user_id=user_id, name=user.name, surname=user.surname,
-                               fatname=user.fatname, class_num=class_num, class_let=class_let)
+                               fatname=user.fatname, is_student=user.is_student, is_teacher=user.is_teacher, class_num=class_num, class_let=class_let)
     else:
         return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
                                text='To main')
 
 
-@app.route('/profile/edit/<int:user_id>')  # Профиль
+@app.route('/profile/edit/<int:user_id>', methods=['POST', 'GET'])  # Профиль
 def profile_edit(user_id):
-    pass
+    user = Users.query.filter_by(user_id=user_id).first()
+
+    if request.method == 'POST':
+        name = request.form['name']
+        surname = request.form['surname']
+        fatname = request.form['fatname']
+
+        type_user = request.form.get('type_user')
+        is_teacher = True if type_user == 'teacher' else False
+        is_student = not is_teacher
+
+        if not all((name, surname, fatname, type_user)):
+            return render_template('profile_edit.html', clear_fields=True)
+
+        try:
+            user.name=name
+            user.surname=surname
+            user.fatname=fatname
+            user.is_student=is_student
+            user.is_teacher=is_teacher
+            db.session.commit()
+            return render_template('notification.html', message=MESSAGE_LIST[3965], message_id=3965, url=f'/profile/{user_id}', text='Back to profile')
+        except Exception as e:
+            print(e)
+            return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898, url=f'/profile/{user_id}', text='Back to profile')
+
+    else:
+        if user:
+            is_student = user.is_student
+            is_teacher = user.is_teacher
+            return render_template('profile_edit.html', user_id=user_id, name=user.name, surname=user.surname, fatname=user.fatname, is_student=is_student, is_teacher=is_teacher)
+        else:
+            return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                                   text='To main')
 
 
 @app.route('/profile/avatar/<int:user_id>')
@@ -79,19 +112,29 @@ def profile_avatar(user_id):
 @app.route('/profile/avatar/upload/<int:user_id>', methods=['POST', 'GET'])
 def profile_avatar_upload(user_id):
     if request.method == 'POST':
+
         pic = request.files['pic']
         if not pic:
-            return "NOPIC", 400
+            return render_template('profile_avatar_upload.html', no_file=True)
         filename = secure_filename(pic.filename)
         mimetype = pic.mimetype
         if not filename or not mimetype:
-            return "WRONGDATA", 400
-
-        img = Img(user_id=user_id, img=pic.read(), name=filename, mimetype=mimetype)
-        db.session.add(img)
-        db.session.commit()
-        return "Img uploaded", 200
-
+            return render_template('profile_avatar_upload.html', err_file=True)
+        img = Img.query.filter_by(user_id=user_id).first()
+        try:
+            if not img:
+                img = Img(user_id=user_id, img=pic.read(), name=filename, mimetype=mimetype)
+                db.session.add(img)
+                db.session.commit()
+            else:
+                img.img=pic.read()
+                img.name=filename
+                img.mimetype=mimetype
+                db.session.commit()
+        except Exception as e:
+            print(e)
+            return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898, url=f'/profile/{user_id}', text='Back')
+        return render_template('notification.html', message=MESSAGE_LIST[1186], message_id=1186, url=f'/profile/{user_id}', text='Back to profile')
     else:
         return render_template('profile_avatar_upload.html')
 
@@ -137,27 +180,19 @@ def singup():
         if not all((name, surname, fatname, password_1, password_2, type_user)):
             return render_template('singup.html', clear_fields=True)
 
-        all_users = Users.query.all()
 
-        user_exists = check_name_into_database(name=name, surname=surname, fatname=fatname, all_users=all_users)
+        password = generate_password_hash(password_1)
+        user = Users(name=name, surname=surname, fatname=fatname, password=password, is_teacher=is_teacher,
+                     is_student=is_student)
+        try:
+            db.session.add(user)
+            db.session.commit()
 
-        if not user_exists:
-            password = generate_password_hash(password_1)
-            user = Users(name=name, surname=surname, fatname=fatname, password=password, is_teacher=is_teacher,
-                         is_student=is_student)
-            try:
-                db.session.add(user)
-                db.session.commit()
-
-                return render_template('notification.html', message=MESSAGE_LIST[1237], message_id=1237, url='/',
-                                       text='To main')
-            except:
-                return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898, url='/singup',
-                                       text='Back')
-
-        else:
-            return render_template('singup.html', user_exists=True)
-
+            return render_template('notification.html', message=MESSAGE_LIST[1237], message_id=1237, url='/',
+                                   text='To main')
+        except:
+            return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898, url='/singup',
+                                   text='Back')
     else:
         return render_template('singup.html')
 
@@ -166,24 +201,6 @@ def singup():
 @app.route('/myclass/<int:user_id>')  # все классы учителя
 def myclass(user_id):
     pass
-
-
-@app.route('/avatar', methods=['POST', 'GET'])
-def upload():
-    if request.method == 'POST':
-        pic = request.files['pic']
-        login = request.form['login']
-        if not pic:
-            return "NOPIC", 400
-        filename = secure_filename(pic.filename)
-        mimetype = pic.mimetype
-        if not filename or not mimetype:
-            return "WRONGDATA", 400
-
-        img = Img(login=login, img=pic.read(), name=filename, mimetype=mimetype)
-        db.session.add(img)
-        db.session.commit()
-        return "Img uploaded", 200
 
 
 if __name__ == '__main__':

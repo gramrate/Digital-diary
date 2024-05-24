@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% block body%}
-<form method="post" enctype="multipart/form-data">
-    <input type="file" name="pic" class="form-control">
-    <input type="submit" value="Upload" class="btn btn-primary">
+<div class="container mt-5">
+    <div class="prof-container">
+        <div class="container">
+            <h1>Upload avatar</h1>
+            <br>
+            <form method="post" enctype="multipart/form-data">
+                <input type="file" name="pic" class="form-control">
+                <br>
+                {% if no_file %}
+                <p class="red-text">Avatar file not selected</p>
+                {% endif %}
+                {% if err_file %}
+                <p class="red-text">Avatar file is corrupted, please try again</p>
+                {% endif %}
+                <input type="submit" value="Upload" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>
 </form>
 {% endblock %}

@@ -3,15 +3,26 @@
 <div class="prof-container">
     <div class="column">
         <div><img src="avatar/{{user_id}}" alt="Avatar" class="user-avatar"></div>
+        <div class="container">
 
         <div><a href="/profile/avatar/upload/{{user_id}}" class="btn btn-primary">Upload avatar</a></div>
+        </div>
     </div>
     <div class="column">
-        <div class ="container">
+        <div class="container">
             <div class="user-info">
+                <h4>User id - {{user_id}}</h4>
                 <h4>Name - {{name}}</h4>
                 <h4>Surname - {{surname}}</h4>
                 <h4>Fatname - {{fatname}}</h4>
+                {% if is_student %}
+                <h4>Post - Student</h4>
+                {% elif is_teacher %}
+                <h4>Post - Teacher<h4>
+                {% else %}
+                <h4>Post - None</h4>
+                {% endif %}
+
                 <h4>Class - {{class_num}} {{class_let}}</h4>
             </div>
             <a href="/profile/edit/{{user_id}}" class="btn btn-primary">Edit profile</a>

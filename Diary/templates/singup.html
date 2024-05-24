@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
+<div class="prof-container">
+
 <div class="container mt-5">
     <h1>Sing up</h1>
     <form method="post">
@@ -22,11 +24,8 @@
         {% if clear_fields %}
         <p class="red-text">All fields must be completed</p>
         {% endif %}
-        {% if user_exists %}
-        <p class="red-text">Registration failed, user already exists</p>
-        {% endif %}
-
         <input type="submit" class="btn btn-primary" value="Sing up">
     </form>
+</div>
 </div>
 {% endblock %}
