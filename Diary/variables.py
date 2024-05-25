@@ -5,7 +5,7 @@ MESSAGE_LIST = {
     5633: 'There is no user with this id',
     3965: 'Profile successfully changed',
     1186: 'Avatar uploaded successfully',
-    7575: '',
+    7575: 'Incorrect lesson date selected',
     8207: '',
     8609: '',
     8457: '',

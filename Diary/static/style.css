@@ -19,6 +19,13 @@
     justify-content: space-between;
 
 }
+.schedule-container {
+    display: flex;
+    width: 600px;
+    margin: auto;
+    justify-content: space-between;
+
+}
 
 .user-avatar {
     width: 300px;

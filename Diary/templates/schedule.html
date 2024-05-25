@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block body%}
+<div class="container mt-5">
+    <h2>Schedule</h2>
+    <br>
+    <div class="schedule-container">
+        <a class="btn btn-primary" href="/schedule/{{prev_day}}/{{user_id}}">Prev day</a>
+        <h2>{{date}}</h2>
+        <a class="btn btn-primary" href="/schedule/{{next_day}}/{{user_id}}">Next day</a>
+    </div>
+</div>
+{% if empty_day %}
+<div class="container mt-5">
+    <h3 class="red-text">There are no lessons for this day yet</h3>
+</div>
+{% endif %}
+{% if err_date %}
+<div class="container mt-5">
+    <h3 class="red-text">The date is incorrect</h3>
+</div>
+{% endif %}
+<br>
+{% for lesson in day %}
+<div class="prof-container">
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                {% set sub_id = lesson.subject_id %}
+                <h5 class="card-title">{{ lesson.lesson_number }} | {{all_subjects[sub_id]}}</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{lesson.homework}}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+{% endfor %}
+{% endblock %}

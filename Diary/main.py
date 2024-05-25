@@ -9,7 +9,7 @@ from werkzeug.utils import secure_filename
 from db import db_init, db
 from models import *
 from variables import MESSAGE_LIST
-from functions import get_user_by_name
+from functions import *
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret-key-goes-here'
@@ -30,11 +30,66 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/diary/<int:user_id>')  # расписание
-def diary(user_id):
-    pass
+@app.route('/schedule/<date>/<int:user_id>')  # расписание
+def diary(date, user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+
+    if user.is_teacher:
+        pass # сделать обработку на урок этого человека
+    elif user.is_student:
+        student = Student.query.filter_by(user_id=user_id).first()
+        if len(date) != 8:
+            date = get_time()
+            err_date = True
+        else:
+            date = date[:2] + '/' + date[2:4] + '/' + date[4:]
+            err_date = False
+        day = Schedule.query.filter_by(date=date, class_num=student.class_num, class_let=student.class_let)
+        next_day = add_one_day(date)
+        next_day = add_one_day(date)
+        prev_day = subtract_one_day(date)
+
+        if day.count():
+            subjects = Subjects.query.all()
+            all_subjects = ['null']
+            for subj in subjects:
+                all_subjects.append(subj.subject_name)
+            return render_template('schedule.html', user_id=user_id, day=day, all_subjects=all_subjects, date=date, err_date=err_date, next_day=next_day, prev_day=prev_day)
+        else:
+            return render_template('schedule.html', user_id=user_id, empty_day=True, date=date, next_day=next_day, prev_day=prev_day)
 
 
+@app.route('/666')  # расписание
+def sixsixsix():
+    '''
+    day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=1, homework="Подготовить доклад", date='26/05/2024', weekday='sun')
+    db.session.add(day)
+    day = Schedule(class_num='10', class_let='A', subject_id=2, lesson_number=2, teacher_user_id=1, homework="Решить Задачи", date='26/05/2024', weekday='sun')
+    db.session.add(day)
+    day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=3, teacher_user_id=1, homework="Не Задано", date='26/05/2024', weekday='sun')
+    db.session.add(day)
+    day = Schedule(class_num='10', class_let='A', subject_id=4, lesson_number=4, teacher_user_id=1, date='26/05/2024', weekday='sun')
+    db.session.add(day)
+    sub = Subjects(subject_name="Math")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Russ")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Gym")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Eng")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Chemst")
+    db.session.add(sub)
+    sub = Subjects(subject_name="IT")
+    db.session.add(sub)
+    '''
+    student = Student(user_id=2, class_num='11', class_let='A')
+    db.session.add(student)
+    db.session.commit()
+    return 'True'
 @app.route('/homeworks/<int:user_id>')  # ДЗ
 def homeworks(user_id):
     pass
