@@ -3,7 +3,7 @@
 <div class="prof-container">
 
 <div class="container mt-5">
-    <h1>Sing up</h1>
+    <h1>Sign up</h1>
     <form method="post">
         <input type="text" name="surname" class="form-control" placeholder="Enter surname"><br>
         <input type="text" name="name" class="form-control" placeholder="Enter name"><br>
@@ -24,7 +24,10 @@
         {% if clear_fields %}
         <p class="red-text">All fields must be completed</p>
         {% endif %}
-        <input type="submit" class="btn btn-primary" value="Sing up">
+        {% if user_exists %}
+        <p class="red-text">A user with the same name already exists</p>
+        {% endif %}
+        <input type="submit" class="btn btn-primary" value="Sign up">
     </form>
 </div>
 </div>

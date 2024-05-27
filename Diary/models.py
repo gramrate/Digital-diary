@@ -30,7 +30,6 @@ class Student(db.Model):
 class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, index=True)
-    teacher_classes = db.Column(db.String(70), nullable=False, default='[]')
     subject_id = db.Column(db.Integer)
 
 
@@ -56,4 +55,3 @@ class Schedule(db.Model):
     teacher_user_id = db.Column(db.Integer)
     homework = db.Column(db.String(50), default='')
     date = db.Column(db.String(20), nullable=False)
-    weekday = db.Column(db.String(10), nullable=False)

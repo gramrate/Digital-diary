@@ -2,6 +2,7 @@
 {% block body%}
 <div class="container mt-5">
     <h2>Schedule</h2>
+    <h2>{{weekday}}</h2>
     <br>
     <div class="schedule-container">
         <a class="btn btn-primary" href="/schedule/{{prev_day}}/{{user_id}}">Prev day</a>
@@ -20,6 +21,7 @@
 </div>
 {% endif %}
 <br>
+
 {% for lesson in day %}
 <div class="prof-container">
     <div class="container">
@@ -30,6 +32,11 @@
             </div>
             <div class="card-body">
                 <p class="card-text">{{lesson.homework}}</p>
+                {% if is_teacher %}
+                <div class="container mt-5">
+                    <a class="btn btn-primary" href="/schedule/homework/{{lesson.id}}/{{user_id}}">Edit</a>
+                </div>
+                {% endif %}
             </div>
         </div>
     </div>

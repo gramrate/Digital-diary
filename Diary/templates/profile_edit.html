@@ -25,8 +25,12 @@
                         <label for="option1">I'm Student</label>
                         <input type="radio" id="teacher" name="type_user" value="teacher">
                         <label for="option2">I'm Teacher</label>
-                        {% elif clear_fields %}
+                        {% endif %}
+                        {% if clear_fields %}
                         <p class="red-text">All fields must be completed</p>
+                        {% endif %}
+                        {% if user_exists %}
+                        <p class="red-text">A user with the same name already exists</p>
                         {% endif %}
                         <br><br>
                         <input type="submit" class="btn btn-primary" value="Edit">

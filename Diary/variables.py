@@ -6,7 +6,7 @@ MESSAGE_LIST = {
     3965: 'Profile successfully changed',
     1186: 'Avatar uploaded successfully',
     7575: 'Incorrect lesson date selected',
-    8207: '',
+    8207: 'Something is wrong with your id',
     8609: '',
     8457: '',
     2776: '',
@@ -24,4 +24,14 @@ MESSAGE_LIST = {
     8866: '',
     8947: '',
     1583: '',
+}
+
+WEEKDAYS = {
+    0: 'Monday',
+    1: 'Thursday',
+    2: 'Wednesday',
+    3: 'Thursday',
+    4: 'Friday',
+    5: 'Saturday',
+    6: 'Sunday',
 }

@@ -1,3 +1,8 @@
+* {
+    margin: 4px;
+}
+
+
 .red-text {
     color: red;
 }
@@ -7,7 +12,7 @@
 }
 
 .column {
-    flex: 1;
+    flex: 2px;
     margin: 10px;
     /* Стили для колонок */
 }
