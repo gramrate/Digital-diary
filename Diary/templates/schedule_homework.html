@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="prof-container">
+<div class="container mt-5">
+    <h1>Homework</h1>
+    <h3>{{date}}</h3>
+    <h3>{{subject}}</h3>
+    <h3>{{class_num}} {{class_let}}</h3>
+    <form method="post">
+        <input type="text" name="homework" class="form-control" placeholder="Enter homework" value="{{homework}}"><br>
+
+        {% if clear_fields %}
+        <p class="red-text">All fields must be completed</p>
+        {% endif %}
+        <input type="submit" class="btn btn-primary" value="Set">
+    </form>
+</div>
+</div>
+{% endblock %}

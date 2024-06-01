@@ -30,6 +30,10 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/schedule/<int:user_id>')  # расписание
+def schedule_redirect(user_id):
+    return redirect(f'/schedule/0/{user_id}')
+
 @app.route('/schedule/<date>/<int:user_id>')  # расписание
 def schedule(date, user_id):
     user = Users.query.filter_by(user_id=user_id).first()
@@ -50,13 +54,18 @@ def schedule(date, user_id):
     is_teacher = False
     if user.is_teacher:
         teacher = Teacher.query.filter_by(user_id=user_id).first()
+        if not teacher:
+            return render_template('notification.html', message=MESSAGE_LIST[5775], message_id=5775, url=f'/',
+                                   text='To main')
         day = Schedule.query.filter_by(date=date, teacher_user_id=teacher.user_id)
         is_teacher = True
-
 
         # делать обработку на урок этого человека
     elif user.is_student:
         student = Student.query.filter_by(user_id=user_id).first()
+        if not student:
+            return render_template('notification.html', message=MESSAGE_LIST[5775], message_id=5775, url=f'/',
+                                   text='To main')
 
         day = Schedule.query.filter_by(date=date, class_num=student.class_num, class_let=student.class_let)
 
@@ -76,9 +85,52 @@ def schedule(date, user_id):
         return render_template('schedule.html', user_id=user_id, empty_day=True, date=date, next_day=next_day,
                                prev_day=prev_day, weekday=weekday, is_teacher=is_teacher)
 
+
+@app.route('/schedule/homework/<int:lesson_id>/<int:user_id>', methods=['POST', 'GET'])
+def schedule_homework(lesson_id, user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[8207], message_id=8207,
+                               url=f'/schedule/0/{user_id}', text='Back to schedule')
+    if user.is_teacher:
+        lesson = Schedule.query.filter_by(id=lesson_id).first()
+        if not lesson:
+            return render_template('notification.html', message=MESSAGE_LIST[8609], message_id=8609,
+                                   url=f'/schedule/0/{user_id}', text='To schedule')
+        subject_obj = Subjects.query.filter_by(subject_id=lesson.subject_id).first()
+        if not subject_obj:
+            return render_template('notification.html', message=MESSAGE_LIST[8609], message_id=8609,
+                                   url=f'/schedule/0/{user_id}', text='To schedule')
+        subject = subject_obj.subject_name
+        date = lesson.date
+        class_num = lesson.class_num
+        class_let = f'"{lesson.class_let}"'
+        date_url = date.replace('/', '')
+        if request.method == 'POST':
+            homework = request.form['homework']
+
+            if not homework:
+                return render_template('schedule_homework.html', date=date, subject=subject, class_num=class_num,
+                                       class_let=class_let, clear_fields=True)
+            try:
+                lesson.homework = homework
+                db.session.commit()
+                return render_template('notification.html', message=MESSAGE_LIST[8457], message_id=8457,
+                                       url=f'/schedule/{date_url}/{user_id}', text='Back to schedule')
+            except Exception as e:
+                return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
+                                       url=f'/schedule/{date_url}/{user_id}', text='Back to schedule')
+        else:
+            return render_template('schedule_homework.html', date=date, subject=subject, class_num=class_num,
+                                   class_let=class_let, homework=lesson.homework)
+    else:
+        return render_template('notification.html', message=MESSAGE_LIST[2776], message_id=2776,
+                               url=f'/schedule/0/{user_id}', text='Back to schedule')
+
+
 @app.route('/666')  # расписание
 def sixsixsix():
-    day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=3, date='27/05/2024')
+    '''day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=3, date='27/05/2024')
     db.session.add(day)
     day = Schedule(class_num='10', class_let='A', subject_id=4, lesson_number=2, teacher_user_id=3, date='27/05/2024')
     db.session.add(day)
@@ -99,11 +151,11 @@ def sixsixsix():
     db.session.add(sub)
     sub = Subjects(subject_name="IT")
     db.session.add(sub)
-
-    student = Student(user_id=2, class_num='11', class_let='A')
+    '''
+    student = Student(user_id=4, class_num='10', class_let='A')
     db.session.add(student)
-    teacher = Teacher(user_id=3, subject_id=1)
-    db.session.add(teacher)
+    # teacher = Teacher(user_id=3, subject_id=1)
+    # db.session.add(teacher)
     db.session.commit()
     return 'True'
 
@@ -122,11 +174,6 @@ def myclass(user_id):
 @app.route('/ratings/<int:user_id>')  # оценки
 def ratings(user_id):
     pass
-
-
-@app.route('/schedule/homework/<int:lesson_id>/<int:user_id>')  # оценки
-def schedule_homework(lesson_id, user_id):
-    return f'{lesson_id} | {user_id}'
 
 
 @app.route('/profile/<int:user_id>')  # Профиль
@@ -272,7 +319,7 @@ def signup():
             return render_template('signup.html', password_mismatch=True)
         if not all((name, surname, fatname, password_1, password_2, type_user)):
             return render_template('signup.html', clear_fields=True)
-        if Users.query.filter_by(name=name, fatname=fatname, surname=surname):
+        if Users.query.filter_by(name=name, fatname=fatname, surname=surname).first():
             return render_template('signup.html', user_exists=True)
         password = generate_password_hash(password_1)
         user = Users(name=name, surname=surname, fatname=fatname, password=password, is_teacher=is_teacher,
