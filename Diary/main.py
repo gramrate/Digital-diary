@@ -10,10 +10,11 @@ from db import db_init, db
 from models import *
 from variables import MESSAGE_LIST, WEEKDAYS
 from functions import *
+import config
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret-key-goes-here'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SECRET_KEY'] = config.APP_SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = config.SQL_PATH
 
 db_init(app)
 
@@ -25,16 +26,63 @@ def load_user(user_id):
     return UserLogin().fromDB(user_id, Users)
 
 
+@app.route('/666')  # расписание
+@login_required
+def sixsixsix():
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=1, homework='no', date='06/06/2024')
+    db.session.add(lesson)
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=2, teacher_user_id=1, homework='no', date='06/06/2024')
+    db.session.add(lesson)
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=3, teacher_user_id=1, homework='no', date='06/06/2024')
+    db.session.add(lesson)
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=4, teacher_user_id=1, homework='no', date='06/06/2024')
+    db.session.add(lesson)
+
+    sub = Subjects(subject_name="Math")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Russ")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Gym")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Eng")
+    db.session.add(sub)
+    sub = Subjects(subject_name="Chemst")
+    db.session.add(sub)
+    sub = Subjects(subject_name="IT")
+    db.session.add(sub)
+
+    student = Student(user_id=1, class_num='10', class_let='A')
+    db.session.add(student)
+    teacher = Teacher(user_id=2, subject_id=1)
+    db.session.add(teacher)
+
+    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=5, date='06/06/2024', comment='no comment')
+    db.session.add(rating)
+    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=2, date='06/06/2024', comment='no comment')
+    db.session.add(rating)
+    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=4, date='06/06/2024', comment='no comment')
+    db.session.add(rating)
+    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=3, date='06/06/2024', comment='no comment')
+    db.session.add(rating)
+    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=5, date='06/06/2024', comment='no comment')
+    db.session.add(rating)
+    db.session.commit()
+    return 'True'
+
+
 @app.route('/')
 def index():
     return render_template('index.html')
 
 
 @app.route('/schedule/<int:user_id>')  # расписание
+@login_required
 def schedule_redirect(user_id):
     return redirect(f'/schedule/0/{user_id}')
 
+
 @app.route('/schedule/<date>/<int:user_id>')  # расписание
+@login_required
 def schedule(date, user_id):
     user = Users.query.filter_by(user_id=user_id).first()
     if not user:
@@ -87,6 +135,7 @@ def schedule(date, user_id):
 
 
 @app.route('/schedule/homework/<int:lesson_id>/<int:user_id>', methods=['POST', 'GET'])
+@login_required
 def schedule_homework(lesson_id, user_id):
     user = Users.query.filter_by(user_id=user_id).first()
     if not user:
@@ -128,59 +177,101 @@ def schedule_homework(lesson_id, user_id):
                                url=f'/schedule/0/{user_id}', text='Back to schedule')
 
 
-@app.route('/666')  # расписание
-def sixsixsix():
-    '''day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=3, date='27/05/2024')
-    db.session.add(day)
-    day = Schedule(class_num='10', class_let='A', subject_id=4, lesson_number=2, teacher_user_id=3, date='27/05/2024')
-    db.session.add(day)
-    day = Schedule(class_num='10', class_let='A', subject_id=4, lesson_number=3, teacher_user_id=3, date='27/05/2024')
-    db.session.add(day)
-    day = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=4, teacher_user_id=3, date='27/05/2024')
-    db.session.add(day)
-
-    sub = Subjects(subject_name="Math")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Russ")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Gym")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Eng")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Chemst")
-    db.session.add(sub)
-    sub = Subjects(subject_name="IT")
-    db.session.add(sub)
-    '''
-    student = Student(user_id=4, class_num='10', class_let='A')
-    db.session.add(student)
-    # teacher = Teacher(user_id=3, subject_id=1)
-    # db.session.add(teacher)
-    db.session.commit()
-    return 'True'
-
-
 @app.route('/homeworks/<int:user_id>')  # ДЗ
+@login_required
 def homeworks(user_id):
     pass
 
 
 # только для учителя
 @app.route('/myclass/<int:user_id>')  # все классы учителя
+@login_required
 def myclass(user_id):
     pass
 
 
+@login_required
 @app.route('/ratings/<int:user_id>')  # оценки
 def ratings(user_id):
-    pass
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+    # rating = Rating.query.filter_by(user_id=user_id)
+    # if not len(rating):
+    #     return render_template('notification.html', message=MESSAGE_LIST[5775], message_id=5775, url=f'/',
+    #                            text='To main')
+
+    all_subjects = Subjects.query.all()
+    # all_subjects = []
+    # all_ratings = ['null']
+    # for subj in subjects:
+    #     all_subjects.append(subj.subject_name)
+
+    return render_template('ratings.html', user_id=user_id, all_subjects=all_subjects)
+
+
+@login_required
+@app.route('/ratings/<int:subject_id>/<int:user_id>')  # оценки
+def ratings_of_subject(subject_id, user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+    if user.is_teacher:
+        return render_template('notification.html', message=MESSAGE_LIST[2776], message_id=2776,
+                               url=f'/ratings/{user_id}',
+                               text='To ratings')
+    elif user.is_student:
+        subject = Subjects.query.filter_by(subject_id=subject_id).first()
+        if subject:
+            subject_name = subject.subject_name
+        else:
+            subject_name = "Error"
+        rating = Rating.query.filter_by(subject_id=subject_id, user_id=user_id)
+        if len(list(rating)) == 0:
+            return render_template('each_rating.html', user_id=user_id, no_rating=True, subject_name=subject_name)
+
+        sredn = round(sum([subj.rate for subj in rating]) / len(list(rating)), 2)
+        return render_template('each_rating.html', user_id=user_id, rating=rating, subject_name=subject_name,
+                               sredn=sredn)
+
+
+@login_required
+@app.route('/ratings/each/<int:rate_id>/<int:user_id>')  # оценки
+def each_rating_of_subject(rate_id, user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+    if user.is_teacher:
+        return render_template('notification.html', message=MESSAGE_LIST[2776], message_id=2776,
+                               url=f'/ratings/{user_id}',
+                               text='To ratings')
+    elif user.is_student:
+        rate = Rating.query.filter_by(id=rate_id).first()
+        if not rate:
+            return False
+        subject = Subjects.query.filter_by(subject_id=rate.subject_id).first()
+        if subject:
+            subject_name = subject.subject_name
+        else:
+            subject_name = "Error"
+
+        return render_template('about_rate.html', user_id=user_id, susubject_name=subject_name, rate=rate.rate, date=rate.date, comment=rate.comment, subject_id=rate.subject_id)
+
+
 
 
 @app.route('/profile/<int:user_id>')  # Профиль
+@login_required
 def profile(user_id):
     user = Users.query.filter_by(user_id=user_id).first()
-    student = Student.query.filter_by(user_id=user_id).first()
-    if user:
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+    if user.is_student:
+        student = Student.query.filter_by(user_id=user_id).first()
         if not student:
             class_num = 'You haven\'t been assigned to a class yet'
             class_let = ''
@@ -188,14 +279,27 @@ def profile(user_id):
             class_num = student.class_num
             class_let = f'"{student.class_let}"'
         return render_template('profile.html', user_id=user_id, name=user.name, surname=user.surname,
-                               fatname=user.fatname, is_student=user.is_student, is_teacher=user.is_teacher,
+                               fatname=user.fatname, is_student=True,
                                class_num=class_num, class_let=class_let)
+    elif user.is_teacher:
+        teacher = Teacher.query.filter_by(user_id=user_id).first()
+        if teacher:
+            subjects = Subjects.query.filter_by(subject_id=teacher.subject_id).first()
+            if subjects:
+                subject = subjects.subject_name
+        else:
+            subject = 'You haven\'t been assigned to subjects yet'
+
+        return render_template('profile.html', user_id=user_id, name=user.name, surname=user.surname,
+                               fatname=user.fatname, is_teacher=True,
+                               subject=subject)
     else:
-        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+        return render_template('notification.html', message=MESSAGE_LIST[5775], message_id=5775, url=f'/',
                                text='To main')
 
 
 @app.route('/profile/edit/<int:user_id>', methods=['POST', 'GET'])  # Профиль
+@login_required
 def profile_edit(user_id):
     user = Users.query.filter_by(user_id=user_id).first()
 
@@ -241,6 +345,7 @@ def profile_edit(user_id):
 
 
 @app.route('/profile/avatar/<int:user_id>')
+@login_required
 def profile_avatar(user_id):
     img = Img.query.filter_by(user_id=user_id).first()
     if not img:
@@ -249,6 +354,7 @@ def profile_avatar(user_id):
 
 
 @app.route('/profile/avatar/upload/<int:user_id>', methods=['POST', 'GET'])
+@login_required
 def profile_avatar_upload(user_id):
     if request.method == 'POST':
 
@@ -291,7 +397,7 @@ def signin():
         if not all((name, surname, fatname, password)):
             return render_template('signin.html', clear_fields=True)
 
-        user = Users.query.filter_by(name=name, fatname=fatname, surname=surname)
+        user = Users.query.filter_by(name=name, fatname=fatname, surname=surname).first()
         if user:
             if check_password_hash(user.password, password):
                 userlogin = UserLogin().create(user)

@@ -1,0 +1,22 @@
+{%extends "base.html"%}
+{%block body%}
+<div class="prof-container">
+    <div class="container">
+        <h1>{{subject_name}} ratings</h1>
+        {% if no_rating %}
+        <h3 class="red-text">You have no grades for this subject</h3>
+        {% else %}
+        <h2>Average rating - {{sredn}}</h2>
+        {% for rate in rating %}
+        <div class="alert alert-info">
+            <h2>{{rate.rate}}</h2>
+            <div>
+                <a href="/ratings/each/{{rate.id}}/{{user_id}}" class="btn btn-primary">More details</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <a href="/ratings/{{user_id}}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,16 @@
+{%extends "base.html"%}
+{%block body%}
+<div class="prof-container">
+    <div class="container">
+        <h1>Ratings</h1>
+        {% for subject in all_subjects %}
+        <div class="alert alert-info">
+            <h2>{{subject.subject_name}}</h2>
+            <div>
+                <a href="/ratings/{{subject.subject_id}}/{{user_id}}" class="btn btn-primary">More details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}

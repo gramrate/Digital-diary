@@ -37,7 +37,8 @@ class Rating(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, index=True)
     subject_id = db.Column(db.Integer)
-    rating = db.Column(db.Integer)
+    lesson_id = db.Column(db.Integer)
+    rate = db.Column(db.Integer)
     date = db.Column(db.String(20), nullable=False)
     comment = db.Column(db.String(50), nullable=False)
 
