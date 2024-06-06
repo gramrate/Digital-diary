@@ -251,7 +251,8 @@ def each_rating_of_subject(rate_id, user_id):
     elif user.is_student:
         rate = Rating.query.filter_by(id=rate_id).first()
         if not rate:
-            return False
+            return render_template('notification.html', message=MESSAGE_LIST[4454], message_id=4454, url=f'/ratings/{user_id}',
+                                   text='To ratings')
         subject = Subjects.query.filter_by(subject_id=rate.subject_id).first()
         if subject:
             subject_name = subject.subject_name

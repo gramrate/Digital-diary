@@ -11,7 +11,7 @@ MESSAGE_LIST = {
     8457: 'Homework added successfully',
     2776: 'You do not have sufficient rights to view this page',
     5775: 'You do not have access to the diary, contact the administrator',
-    4454: '',
+    4454: 'Something is wrong with the rate',
     3870: '',
     7466: '',
     1201: '',
