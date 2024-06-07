@@ -7,10 +7,12 @@ def get_time():
     return formatted_date
 
 
-def get_user_by_name(name, surname, fatname, all_users):
-    for user in all_users:
-        if user.name == name and user.surname == surname and user.fatname == fatname:
-            return user
+def get_user_by_name(name, Users):
+    surname, name, fatname = name.split()
+    user = Users.query.filter_by(surname=surname, name=name, fatname=fatname).first()
+    if not user:
+        return None
+    return user
 
 
 def add_one_day(date_string):
@@ -28,3 +30,9 @@ def subtract_one_day(date_string):
 def get_weekday(date_str):
     date_obj = datetime.strptime(date_str, '%d/%m/%Y')
     return date_obj.weekday()
+
+def get_name_by_id(user_id, Users):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return None
+    return f'{user.surname} {user.name} {user.fatname}'

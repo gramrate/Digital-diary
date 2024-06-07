@@ -29,13 +29,17 @@ def load_user(user_id):
 @app.route('/666')  # расписание
 @login_required
 def sixsixsix():
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=1, homework='no', date='06/06/2024')
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=1, homework='no',
+                      date='06/06/2024')
     db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=2, teacher_user_id=1, homework='no', date='06/06/2024')
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=2, teacher_user_id=1, homework='no',
+                      date='06/06/2024')
     db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=3, teacher_user_id=1, homework='no', date='06/06/2024')
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=3, teacher_user_id=1, homework='no',
+                      date='06/06/2024')
     db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=4, teacher_user_id=1, homework='no', date='06/06/2024')
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=4, teacher_user_id=1, homework='no',
+                      date='06/06/2024')
     db.session.add(lesson)
 
     sub = Subjects(subject_name="Math")
@@ -67,6 +71,16 @@ def sixsixsix():
     rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=5, date='06/06/2024', comment='no comment')
     db.session.add(rating)
     db.session.commit()
+    return 'True'
+
+
+@app.route('/777')
+def sevsevsev():
+    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=2, homework='no',
+                      date='06/06/2024')
+    db.session.add(lesson)
+    db.session.commit()
+
     return 'True'
 
 
@@ -177,17 +191,55 @@ def schedule_homework(lesson_id, user_id):
                                url=f'/schedule/0/{user_id}', text='Back to schedule')
 
 
-@app.route('/homeworks/<int:user_id>')  # ДЗ
+@app.route('/schedule/ratings/<int:lesson_id>/<int:user_id>', methods=['POST', 'GET'])  # расписание
 @login_required
-def homeworks(user_id):
-    pass
+def schedule_rating(lesson_id, user_id):
+    user = Users.query.filter_by(user_id=user_id).first()
+    if not user:
+        return render_template('notification.html', message=MESSAGE_LIST[5633], message_id=5633, url=f'/',
+                               text='To main')
+    if user.is_student:
+        return render_template('notification.html', message=MESSAGE_LIST[2776], message_id=2776,
+                               url=f'/ratings/{user_id}',
+                               text='To ratings')
+    elif user.is_teacher:
+        lesson = Schedule.query.filter_by(id=lesson_id).first()
+        if not lesson:
+            return render_template('notification.html', message=MESSAGE_LIST[8609], message_id=8609,
+                                   url=f'/schedule/0/{user_id}',
+                                   text='To schedule')
 
+        if request.method == 'POST':
+            rate = request.form['rate']
+            student = request.form['student']
+            comment = request.form['comment']
 
-# только для учителя
-@app.route('/myclass/<int:user_id>')  # все классы учителя
-@login_required
-def myclass(user_id):
-    pass
+            student = get_user_by_name(name=student, Users=Users)
+            if not student:
+                return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
+                                       url=f'/', text='To main')
+            try:
+                rate = Rating(user_id=student.user_id, subject_id=lesson.subject_id, lesson_id=lesson.id, rate=rate, date=lesson.date, comment=comment)
+                db.session.add(rate)
+                db.session.commit()
+                return render_template('notification.html', message=MESSAGE_LIST[3870], message_id=3870,
+                                       url=f'/schedule/{(lesson.date).replace("/", "")}/{user_id}',text='To schedule')
+            except Exception as e:
+                print(e)
+                return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
+                                       url=f'/',text='To main')
+        else:
+
+            date = lesson.date.replace('/', '')
+            all_students = Student.query.filter_by(class_num=lesson.class_num, class_let=lesson.class_let)
+            students = []
+            for stud in all_students:
+                name = get_name_by_id(user_id=stud.user_id, Users=Users)
+                if name: students.append(name)
+            return render_template('schedule_rating.html', user_id=user_id, date=date, students=students)
+    else:
+        return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
+                               url=f'/',text='To main')
 
 
 @login_required
@@ -251,7 +303,8 @@ def each_rating_of_subject(rate_id, user_id):
     elif user.is_student:
         rate = Rating.query.filter_by(id=rate_id).first()
         if not rate:
-            return render_template('notification.html', message=MESSAGE_LIST[4454], message_id=4454, url=f'/ratings/{user_id}',
+            return render_template('notification.html', message=MESSAGE_LIST[4454], message_id=4454,
+                                   url=f'/ratings/{user_id}',
                                    text='To ratings')
         subject = Subjects.query.filter_by(subject_id=rate.subject_id).first()
         if subject:
@@ -259,9 +312,8 @@ def each_rating_of_subject(rate_id, user_id):
         else:
             subject_name = "Error"
 
-        return render_template('about_rate.html', user_id=user_id, susubject_name=subject_name, rate=rate.rate, date=rate.date, comment=rate.comment, subject_id=rate.subject_id)
-
-
+        return render_template('about_rate.html', user_id=user_id, susubject_name=subject_name, rate=rate.rate,
+                               date=rate.date, comment=rate.comment, subject_id=rate.subject_id)
 
 
 @app.route('/profile/<int:user_id>')  # Профиль

@@ -12,7 +12,7 @@ MESSAGE_LIST = {
     2776: 'You do not have sufficient rights to view this page',
     5775: 'You do not have access to the diary, contact the administrator',
     4454: 'Something is wrong with the rate',
-    3870: '',
+    3870: 'The rate was successfully completed',
     7466: '',
     1201: '',
     5599: '',

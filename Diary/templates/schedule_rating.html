@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="prof-container">
+
+    <div class="container mt-5">
+        <h1>Rating</h1>
+        <form method="post">
+            <label for="rate">Rate - </label>
+            <select class="select-label" name="rate" id="rate">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <br>
+            <label for="student">Student - </label>
+            <select class="select-label" name="student" id="student">
+                {% for student in students %}
+                <option value="{{student}}">{{student}}</option>
+                {% endfor %}
+            </select>
+
+            <br><br>
+            <input type="text" name="comment" class="form-control" placeholder="Enter comment"><br>
+
+            <input type="submit" class="btn btn-primary" value="Set">
+            <a class="btn btn-danger" href="/schedule/{{date}}/{{user_id}}">Cancel</a>
+        </form>
+    </div>
+</div>
+{% endblock %}
