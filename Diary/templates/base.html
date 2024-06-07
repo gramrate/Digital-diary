@@ -20,18 +20,17 @@
     </div>
 
     <ul class="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
-        <li><a href="/schedule/" class="nav-link px-2 link-secondary">Shedule</a></li>
-        <li><a href="/homeworks/" class="nav-link px-2">Homework</a></li>
-        <li><a href="/ratings/" class="nav-link px-2">Ratings</a></li>
-        <li><a href="/profile/" class="nav-link px-2">Profile</a></li>
-        <li><a href="/myclass/" class="nav-link px-2">My class</a></li>
+        <li><a href="/schedule/{{user_id}}" class="nav-link px-2 link-secondary">Shedule</a></li>
+        <li><a href="/ratings/{{user_id}}" class="nav-link px-2">Ratings</a></li>
+        <li><a href="/profile/{{user_id}}" class="nav-link px-2">Profile</a></li>
+        <li><a href="/myclasses/{{user_id}}" class="nav-link px-2">My class</a></li>
     </ul>
 
     <div class="col-md-3 text-end">
 <!--        <button type="button" class="btn btn-outline-primary me-2">Login</button>-->
 <!--        <button type="button" class="btn btn-primary">Sign-up</button>-->
-        <a href="/signin" class="btn btn-outline-primary me-2">Sign in</a>
-        <a href="/signup" class="btn btn-primary">Sign up</a>
+        <a href="/signin/{{user_id}}" class="btn btn-outline-primary me-2">Sign in</a>
+        <a href="/signup/{{user_id}}" class="btn btn-primary">Sign up</a>
     </div>
 </header>
 

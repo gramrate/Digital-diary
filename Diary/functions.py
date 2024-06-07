@@ -36,3 +36,19 @@ def get_name_by_id(user_id, Users):
     if not user:
         return None
     return f'{user.surname} {user.name} {user.fatname}'
+
+
+def get_classes_for_teacher(user_id, Schedule):
+    lessons = Schedule.query.filter_by(teacher_user_id=user_id)
+    return list({(lesson.class_num, lesson.class_let) for lesson in lessons})
+
+
+def get_ratings_by_teacher(student_id, teacher_id, Rating, Schedule):
+    rating = Rating.query.filter_by(user_id=student_id)
+    rates = []
+    for rate in rating:
+        lesson = Schedule.query.filter_by(id=rate.lesson_id).first()
+        if lesson and teacher_id == lesson.teacher_user_id:
+            rates.append(rate)
+
+    return rates

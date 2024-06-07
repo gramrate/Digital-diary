@@ -1,0 +1,17 @@
+{%extends "base.html"%}
+{%block body%}
+<div class="prof-container">
+    <div class="container">
+        <h1>Class {{class_num}} "{{class_let}}"</h1>
+        {% for student in students %}
+        <div class="alert alert-info">
+            <h2>{{student[1]}}</h2>
+            <div>
+                <a href="/myclasses/each/student/{{student[0]}}/{{user_id}}" class="btn btn-primary">More details</a>
+            </div>
+        </div>
+        {% endfor %}
+        <a href="/myclasses/{{user_id}}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{%endblock%}

@@ -1,0 +1,21 @@
+{%extends "base.html"%}
+{%block body%}
+<div class="prof-container">
+    <div class="container">
+        <h1>{{name}} - rating for teacher</h1>
+        {% if no_rating %}
+        <h3 class="red-text">The student does not have the grades you gave him</h3>
+        {% else %}
+        {% for rate in rating %}
+        <div class="alert alert-info">
+            <h2>{{rate.rate}}</h2>
+            <div>
+                <a href="/myclasses/each/student/rate/{{rate.id}}/{{user_id}}" class="btn btn-primary">More details</a>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <a href="/myclasses/each/{{class_}}/{{user_id}}" class="btn btn-primary">Back</a>
+    </div>
+</div>
+{%endblock%}

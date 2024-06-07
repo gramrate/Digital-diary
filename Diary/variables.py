@@ -13,7 +13,7 @@ MESSAGE_LIST = {
     5775: 'You do not have access to the diary, contact the administrator',
     4454: 'Something is wrong with the rate',
     3870: 'The rate was successfully completed',
-    7466: '',
+    7466: 'Rating successfully deleted',
     1201: '',
     5599: '',
     4975: '',

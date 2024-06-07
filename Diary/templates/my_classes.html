@@ -1,0 +1,16 @@
+{%extends "base.html"%}
+{%block body%}
+<div class="prof-container">
+    <div class="container">
+        <h1>My classes</h1>
+        {% for class in classes %}
+        <div class="alert alert-info">
+            <h2>Class - {{class[0]}} "{{class[1]}}"</h2>
+            <div>
+                <a href="/myclasses/each/{{class[0]}}{{class[1]}}/{{user_id}}" class="btn btn-primary">More details</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{%endblock%}
