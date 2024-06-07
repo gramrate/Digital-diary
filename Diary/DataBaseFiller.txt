@@ -1,0 +1,126 @@
+sub = Subjects(subject_name="Mathematics")
+db.session.add(sub)
+sub = Subjects(subject_name="Russian language")
+db.session.add(sub)
+sub = Subjects(subject_name="Physical Culture")
+db.session.add(sub)
+sub = Subjects(subject_name="English")
+db.session.add(sub)
+sub = Subjects(subject_name="Chemistry")
+db.session.add(sub)
+sub = Subjects(subject_name="Literature")
+db.session.add(sub)
+sub = Subjects(subject_name="Story")
+db.session.add(sub)
+sub = Subjects(subject_name="Social science")
+db.session.add(sub)
+sub = Subjects(subject_name="Programming")
+db.session.add(sub)
+sub = Subjects(subject_name="Physics")
+db.session.add(sub)
+sub = Subjects(subject_name="Life Safety Basics")
+db.session.add(sub)
+
+student = Student(user_id=1, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=2, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=3, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=4, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=5, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=6, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=7, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=8, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=9, class_num='10', class_let='P')
+db.session.add(student)
+student = Student(user_id=10, class_num='10', class_let='P')
+db.session.add(student)
+teacher = Teacher(user_id=11, subject_id=1)
+db.session.add(teacher)
+
+
+
+
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=1, teacher_user_id=11, homework='',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=9, lesson_number=2, teacher_user_id=16,
+                  homework='Prepare a report about a natural phenomenon',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=2, lesson_number=3, teacher_user_id=11, homework='',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=9, lesson_number=4, teacher_user_id=14, homework='',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=5, teacher_user_id=12, homework='',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=7, lesson_number=6, teacher_user_id=12, homework='',
+                  date='11/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=7, lesson_number=7, teacher_user_id=16,
+                  homework='Prepare a report about a natural phenomenon',
+                  date='11/06/2024')
+db.session.add(lesson)
+
+
+
+
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=1, teacher_user_id=11, homework='',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=9, lesson_number=2, teacher_user_id=12, homework='',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=2, lesson_number=3, teacher_user_id=16, homework='',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=9, lesson_number=4, teacher_user_id=12, homework='',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=5, teacher_user_id=11, homework='',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=7, lesson_number=6, teacher_user_id=17,
+                  homework='Read about the siege of Leningrad, be prepared to show the abstract for the last lesson',
+                  date='12/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=7, lesson_number=7, teacher_user_id=17,
+                  homework='Read about the siege of Leningrad, be prepared to show the abstract for the last lesson',
+                  date='12/06/2024')
+db.session.add(lesson)
+
+
+
+
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=1, teacher_user_id=11, homework='',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=2, teacher_user_id=11, homework='',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=4, lesson_number=3, teacher_user_id=16, homework='',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=11, lesson_number=4, teacher_user_id=18,
+                  homework='Do your digital homework',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=4, lesson_number=5, teacher_user_id=16, homework='',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=1, lesson_number=6, teacher_user_id=11, homework='',
+                  date='14/06/2024')
+db.session.add(lesson)
+lesson = Schedule(class_num='10', class_let='P', subject_id=8, lesson_number=7, teacher_user_id=17,
+                  homework='Read about types of social groups',
+                  date='14/06/2024')
+db.session.add(lesson)

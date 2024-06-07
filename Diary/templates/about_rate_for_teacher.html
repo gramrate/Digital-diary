@@ -5,7 +5,10 @@
         <h1>{{name}} - rating details for teacher</h1>
         <h2>Rate - {{rate}}</h2>
         <h3>Date - {{date}}</h3>
-        <h3>comment - {{comment}}</h3>
+        {% if comment %}
+        <h3>comment - {{ comment }}</h3>
+        {% endif %}
+
         <a href="/myclasses/each/student/{{student_id}}/{{user_id}}" class="btn btn-primary">Back</a>
         <a href="/myclasses/each/student/rating/delete/{{rate_id}}/{{user_id}}" class="btn btn-danger">Delete</a>
     </div>

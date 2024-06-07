@@ -31,7 +31,9 @@
                 <h5 class="card-title">{{ lesson.lesson_number }} | {{all_subjects[sub_id]}}</h5>
             </div>
             <div class="card-body">
-                <p class="card-text">{{lesson.homework}}</p>
+                <p class="card-text">{% if lesson.homework %}
+                    {{ lesson.homework }}
+                    {% endif %}</p>
                 {% if is_teacher %}
                 <div class="container mt-5">
                     <a class="btn btn-primary" href="/schedule/ratings/{{lesson.id}}/{{user_id}}">Rate</a>

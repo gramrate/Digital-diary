@@ -5,7 +5,9 @@
         <h1>{{subject_name}} rating details</h1>
         <h2>Rate - {{rate}}</h2>
         <h3>Date - {{date}}</h3>
+        {% if comment %}
         <h3>comment - {{comment}}</h3>
+        {% endif %}
         <a href="/ratings/{{subject_id}}/{{user_id}}" class="btn btn-primary">Back</a>
     </div>
 </div>

@@ -26,70 +26,21 @@ def load_user(user_id):
     return UserLogin().fromDB(user_id, Users)
 
 
-@app.route('/666')  # расписание
-def sixsixsix():
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=1, homework='no',
-                      date='06/06/2024')
-    db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=2, teacher_user_id=1, homework='no',
-                      date='06/06/2024')
-    db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=3, teacher_user_id=1, homework='no',
-                      date='06/06/2024')
-    db.session.add(lesson)
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=4, teacher_user_id=1, homework='no',
-                      date='06/06/2024')
-    db.session.add(lesson)
-
-    sub = Subjects(subject_name="Math")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Russ")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Gym")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Eng")
-    db.session.add(sub)
-    sub = Subjects(subject_name="Chemst")
-    db.session.add(sub)
-    sub = Subjects(subject_name="IT")
-    db.session.add(sub)
-
-    student = Student(user_id=1, class_num='10', class_let='A')
-    db.session.add(student)
-    teacher = Teacher(user_id=2, subject_id=1)
-    db.session.add(teacher)
-
-    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=5, date='06/06/2024', comment='no comment')
-    db.session.add(rating)
-    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=2, date='06/06/2024', comment='no comment')
-    db.session.add(rating)
-    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=4, date='06/06/2024', comment='no comment')
-    db.session.add(rating)
-    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=3, date='06/06/2024', comment='no comment')
-    db.session.add(rating)
-    rating = Rating(user_id=1, subject_id=1, lesson_id=1, rate=5, date='06/06/2024', comment='no comment')
-    db.session.add(rating)
-    db.session.commit()
-    return 'True'
-
-
-@app.route('/777')
-def sevsevsev():
-    lesson = Schedule(class_num='10', class_let='A', subject_id=1, lesson_number=1, teacher_user_id=2, homework='no',
-                      date='06/06/2024')
-    db.session.add(lesson)
-    db.session.commit()
-
-    return 'True'
+@login_manager.unauthorized_handler
+def unauthorized():
+    # Здесь вы можете рендерить свою собственную страницу для неавторизованных пользователей
+    return render_template('unauthorized.html'), 401
 
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
+
 @app.route('/<int:user_id>')
-def main(user_id):
-    return render_template('index.html', user_id=user_id)
+@login_required
+def index_user_id(user_id):
+    return render_template('index_user_id.html', user_id=user_id)
 
 
 @app.route('/myclasses/<int:user_id>')  # расписание
@@ -220,10 +171,12 @@ def delete_rate(rate_id, user_id):
             db.session.delete(rate)
             db.session.commit()
             return render_template('notification.html', message=MESSAGE_LIST[7466], message_id=7466,
-                                   url=f'/myclasses/each/student/{rate.user_id}/{user_id}', text='Back to user', user_id=user_id)
+                                   url=f'/myclasses/each/student/{rate.user_id}/{user_id}', text='Back to user',
+                                   user_id=user_id)
         except:
             return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
-                                   url=f'/myclasses/each/student/{rate.user_id}/{user_id}', text='Back to user', user_id=user_id)
+                                   url=f'/myclasses/each/student/{rate.user_id}/{user_id}', text='Back to user',
+                                   user_id=user_id)
     else:
         return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
                                url=f'/{user_id}', text='To main', user_id=user_id)
@@ -362,7 +315,8 @@ def schedule_rating(lesson_id, user_id):
                 db.session.add(rate)
                 db.session.commit()
                 return render_template('notification.html', message=MESSAGE_LIST[3870], message_id=3870,
-                                       url=f'/schedule/{(lesson.date).replace("/", "")}/{user_id}', text='To schedule', user_id=user_id)
+                                       url=f'/schedule/{(lesson.date).replace("/", "")}/{user_id}', text='To schedule',
+                                       user_id=user_id)
             except Exception as e:
                 print(e)
                 return render_template('notification.html', message=MESSAGE_LIST[4898], message_id=4898,
@@ -394,6 +348,7 @@ def ratings(user_id):
     # for subj in subjects:
     #     all_subjects.append(subj.subject_name)
     return render_template('ratings.html', user_id=user_id, all_subjects=all_subjects)
+
 
 @app.route('/ratings/<int:subject_id>/<int:user_id>')  # оценки
 @login_required
@@ -494,8 +449,9 @@ def profile_edit(user_id):
 
         if not all((name, surname, fatname, type_user)):
             return render_template('profile_edit.html', user_id=user_id, name=user.name, surname=user.surname,
-                                   fatname=user.fatname, is_student=is_student, is_teacher=is_teacher, clear_fields=True)
-        if Users.query.filter_by(name=name, fatname=fatname, surname=surname) and user.is_teacher != is_teacher:
+                                   fatname=user.fatname, is_student=is_student, is_teacher=is_teacher,
+                                   clear_fields=True)
+        if Users.query.filter_by(name=name, fatname=fatname, surname=surname):
             return render_template('profile_edit.html', user_id=user_id, name=user.name, surname=user.surname,
                                    fatname=user.fatname, is_student=is_student, is_teacher=is_teacher, user_exists=True)
         try:
@@ -583,9 +539,10 @@ def signin():
                 login_user(userlogin)
                 return redirect(f'/profile/{user.user_id}')
         else:
-            return render_template('signin.html', err_data=True, user_id=user_id)
+            return render_template('signin.html', err_data=True)
 
     return render_template('signin.html')
+
 
 @app.route('/signin/<int:user_id>', methods=['POST', 'GET'])  # войти
 def signin_user_id(user_id):
@@ -643,6 +600,7 @@ def signup():
     else:
         return render_template('signup.html')
 
+
 @app.route('/signup/<int:user_id>', methods=['POST', 'GET'])  # зарегаться
 def signup_user_id(user_id):
     if request.method == 'POST':
@@ -675,6 +633,11 @@ def signup_user_id(user_id):
                                    text='Back', user_id=user_id)
     else:
         return render_template('signup.html', user_id=user_id)
+
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return redirect('/')
 
 
 if __name__ == '__main__':
