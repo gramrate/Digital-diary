@@ -1,11 +1,11 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask
+from flask import redirect, render_template, request, Response
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.sql import exists
 from werkzeug.security import generate_password_hash, check_password_hash
+from werkzeug.utils import secure_filename
 from flask_login import LoginManager, login_user, login_required
 from UserLogin import UserLogin
-from flask import Flask, request, render_template, Response
-from werkzeug.utils import secure_filename
 from db import db_init, db
 from models import *
 from variables import MESSAGE_LIST, WEEKDAYS
